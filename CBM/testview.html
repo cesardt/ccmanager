@@ -1,0 +1,22 @@
+<form novalidate name="Add" id="add-new-form" method="post" action="">
+  <p>Mail:</p>
+  <input type="text" ng-model="test.mail" required />
+  <p>Password:</p>
+  <input type="text" ng-model="test.password" required />
+  <button class="btn btn-primary" ng-disabled="Add.$invalid "  ng-click="add(test)">Save!</button>
+  <a href="#/" class="btn">Back</a>
+</form>
+
+<script type="text/javascript">
+
+function AddController($scope, $http, $location) {
+    $scope.add = function(test) {
+        $http.post('/add_user', test).success(function(){
+            $location.path('/');     
+        });
+
+
+    };
+}
+
+</script>
