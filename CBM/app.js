@@ -82,11 +82,11 @@ app.post('/add_comic', function(req,res){
       userid=rows[0].iduser;
       data={
         user_id: userid, 
-        comic: req.body.comicid
+        comic: req.body.comic_id
       };
       console.log(data);
     });
-    connection.query('INSERT into user_has_comis set ? ', data, function(err, rows, fields) {
+    connection.query('INSERT into user_has_comics set ? ', data, function(err, rows, fields) {
         if (err) {
           console.error(err);
           res.statusCode = 500;
@@ -114,6 +114,42 @@ app.delete('/delete_user', function(req,res){
     } 
     else {
       connection.query('DELETE from user where mail = ?', req.body.mail, function(err, rows, fields) {
+        if (err) {
+          console.error(err);
+          res.statusCode = 500;
+          res.send({
+            result: 'error',
+            err: err.code
+          });
+        }
+        res.send(rows);
+        connection.release();
+      });
+    }
+  });
+});
+
+app.delete('/delete_user_comic', function(req,res){
+
+  var userid;
+
+  connectionpool.getConnection(function(err, connection) {
+    connection.query('SELECT iduser from user where mail = ?', req.body.mail, function(err, rows, fields) {
+      userid=rows[0].iduser;
+    });
+
+  connectionpool.getConnection(function(err, connection) {
+
+    if (err) {
+      console.error('CONNECTION error: ',err);
+      res.statusCode = 503;
+      res.send({
+        result: 'error',
+        err: err.code
+      });
+    } 
+    else {
+      connection.query('DELETE from user_has_comics where user_id = ? AND comics_id = ?', [userid, req.body.comic_id], function(err, rows, fields) {
         if (err) {
           console.error(err);
           res.statusCode = 500;
@@ -188,6 +224,8 @@ app.put('/update_mail/', function(req,res){
     }
   });
 });
+
+
 
 
 app.listen(3000);
