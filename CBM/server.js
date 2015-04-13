@@ -12,6 +12,12 @@ var  connectionpool = mysql.createPool({
 var app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.static(__dirname + '/public')); 
+
+
+app.get('*', function(req, res) {
+  res.redirect('/#' + req.originalUrl);
+});
 
 app.get('/comics', function(req,res){
   connectionpool.getConnection(function(err, connection) {
@@ -129,7 +135,7 @@ app.delete('/delete_user', function(req,res){
   });
 });
 
-app.delete('/delete_user_comic', function(req,res){
+/*app.delete('/delete_user_comic', function(req,res){
 
   var userid;
 
@@ -163,7 +169,7 @@ app.delete('/delete_user_comic', function(req,res){
       });
     }
   });
-});
+});*/
 
 app.put('/update_password/', function(req,res){
 
