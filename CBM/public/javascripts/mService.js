@@ -11,13 +11,12 @@ var http = require('http');
 
 //Marvel API stuff
 var crypto = require('crypto');
-var timestamp = "1";
-//Add your Marvel API keys here
 var api_key = "";
+var timestamp = "1";
 var p_key = "";
 var hash = crypto.createHash("md5").update(timestamp+p_key+api_key).digest("hex");
 
-var query = "dateDescriptor=thisWeek&noVariants=true&limit=100&orderBy=title&ts="+timestamp+"&apikey="+api_key+"&hash="+hash;
+var query = "dateDescriptor=thisWeek&noVariants=true&format=comic&limit=100&orderBy=title&ts="+timestamp+"&apikey="+api_key+"&hash="+hash;
 var url = "http://gateway.marvel.com/v1/public/comics?"+query;
 console.log("Querying Marvel's database...");
 
@@ -55,10 +54,10 @@ function addToDatabase(array){
         var title_id = 0;
         var match = 0;
 
-        title = array.data.results[i].title;
+        title = array.data.results[index].title;
         title = title.substr(0, title.lastIndexOf(")")+1);
-        issue = array.data.results[i].issueNumber;
-        release = array.data.results[i].dates[0].date;
+        issue = array.data.results[index].issueNumber;
+        release = array.data.results[index].dates[0].date;
 
         var newIssue={
             series_id: 0,
@@ -76,18 +75,19 @@ function addToDatabase(array){
                     throw err;
 
                 if(rows.length <= 0){
-
-                    console.log(title+ " was not in the DB");
                     
                     connection.query("INSERT into series set ?", newTitle, function(err, rows, fields){
                         if(err)
                             throw(err);
-                        console.log("Added "+newTitle.name);
+                        console.log("Added new series "+newTitle.name);
                     });
                 }
 
                 connection.query('Select idseries from series where name = ?', title, function(err, rows, fields){
-                        newIssue.series_id = rows[0].idseries;
+                    if(err)
+                        throw err;
+
+                    newIssue.series_id = rows[0].idseries;
                         connection.query('Select * from comics where series_id = ? AND issue = ?', [newIssue.series_id, newIssue.issue], function(err, rows, fields){
 
                             if(err)
@@ -97,16 +97,16 @@ function addToDatabase(array){
                                 connection.query("INSERT into comics set ?", newIssue, function(err, rows, fields){
                             if(err)
                                 throw(err);
-                            console.log("Added "+ title + " #"+newIssue.issue);
-                            connection.end(function(err){});
+                            console.log("Added new comic "+ title + " #"+newIssue.issue);
                         });
                             }
 
                         })
-                        
-                });             
+
+                });
+         
         });
 
     }
-
+    //connection.end(function(err){}); 
 }
