@@ -30,7 +30,7 @@ app.get('/comics', function(req,res){
       });
     } 
     else {
-      connection.query('Select comics.issue, series.name, series.publisher,comics.release_date  from comics join series on comics.series_id=series.idseries',  function(err, rows, fields) {
+      connection.query('Select comics.issue, series.name, series.publisher,comics.release_date, comics.cover from comics join series on comics.series_id=series.idseries',  function(err, rows, fields) {
         if (err) {
           console.error(err);
           res.statusCode = 500;

@@ -59,7 +59,7 @@ function addToDatabase(array){
         title = title.substr(0, title.lastIndexOf(")")+1);
         issue = array.data.results[index].issueNumber;
         release = array.data.results[index].dates[0].date;
-        image = array.data.results[i].images[0].path + "/portrait_incredible.jpg";
+        image = array.data.results[i].images[0].path + "/detail.jpg";
 
         var newIssue={
             series_id: 0,
