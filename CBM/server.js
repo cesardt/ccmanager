@@ -14,11 +14,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public')); 
 
-
-app.get('*', function(req, res) {
-  res.redirect('/#' + req.originalUrl);
-});
-
 app.get('/comics', function(req,res){
   connectionpool.getConnection(function(err, connection) {
     if (err) {
@@ -231,6 +226,9 @@ app.put('/update_mail/', function(req,res){
   });
 });
 
+app.get('*', function(req, res) {
+  res.redirect('/#' + req.originalUrl);
+});
 
 
 
