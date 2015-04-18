@@ -53,16 +53,19 @@ function addToDatabase(array){
         var release = "";
         var title_id = 0;
         var match = 0;
+        var image = "";
 
         title = array.data.results[index].title;
         title = title.substr(0, title.lastIndexOf(")")+1);
         issue = array.data.results[index].issueNumber;
         release = array.data.results[index].dates[0].date;
+        image = array.data.results[i].images[0].path + "/portrait_incredible.jpg";
 
         var newIssue={
             series_id: 0,
             issue : issue,
-            release_date : release
+            release_date : release,
+            cover: image 
         }
 
         var newTitle={
