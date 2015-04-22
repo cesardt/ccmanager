@@ -37,7 +37,6 @@ http.get(url,function(res){
 function addToDatabase(array){
     var count = array.data.count;
 
-    
 
     for(var i = 0; i < count; i++){
 
@@ -53,19 +52,22 @@ function addToDatabase(array){
         var release = "";
         var title_id = 0;
         var match = 0;
-        var image = "";
+        var image= "";
+        var description = "";
 
         title = array.data.results[index].title;
         title = title.substr(0, title.lastIndexOf(")")+1);
         issue = array.data.results[index].issueNumber;
         release = array.data.results[index].dates[0].date;
-        image = array.data.results[i].images[0].path + "/detail.jpg";
+        image = array.data.results[index].images[0].path + "/detail.jpg";
+        description = array.data.results[index].description;
 
         var newIssue={
             series_id: 0,
             issue : issue,
             release_date : release,
-            cover: image 
+            cover: image,
+            description: description
         }
 
         var newTitle={
@@ -81,7 +83,7 @@ function addToDatabase(array){
                     
                     connection.query("INSERT into series set ?", newTitle, function(err, rows, fields){
                         if(err)
-                            throw(err);
+                            throw("Error inserting series "+err);
                         console.log("Added new series "+newTitle.name);
                     });
                 }
