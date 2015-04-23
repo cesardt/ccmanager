@@ -1,8 +1,8 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 <div class="row" >
 	<div class="col-md-6">
-		<h2> Uncanny Avengers #1 (2013)</h2>
-		<a href="info"><img class="imagedesc" src="images/scarlet.jpg" ></a>
+		<h2>{{title+" #"+issue}}</h2>
+		
 	</div>
 	<div class="col-md-6 divbottom" >
 		<button type="button" class="btn-lg btn-primary button-add">Add to collection <span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>
@@ -10,11 +10,12 @@
 </div>
 
 <div class="row">
-	<div class="col-md-12">
-		<p class="desc">
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit. In non massa quam. Duis vitae velit eget diam sodales ultrices. Donec sit amet efficitur est. Donec vel hendrerit dui, quis laoreet risus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Nunc eu dapibus ex. Nunc volutpat id risus sit amet vulputate. Donec velit ante, venenatis ac fermentum quis, feugiat luctus orci. Pellentesque scelerisque leo est, sit amet tempor nulla mattis quis. Vivamus semper scelerisque lorem ut aliquam. Quisque consectetur, arcu eget finibus rutrum, nunc massa viverra magna, sit amet facilisis diam lacus vel mi. In lorem lacus, bibendum et diam a, ullamcorper euismod massa. Ut lacinia lacus risus, at vestibulum elit pulvinar in. Suspendisse ut augue justo. Duis risus eros, euismod nec blandit sit amet, vestibulum a dui. Cras laoreet augue ligula, ut volutpat enim auctor a.
-		</div >
-	</p>	
+	<div class="col-md-6">
+		<a href="info"><img class="imagedesc" src="{{cover}}" ></a>
+	</div>
+	<div class="col-md-6">
+		<p class="desc">{{description}}</p>
+	</div >
 </div>
 
 <div class="row">
@@ -45,6 +46,5 @@
 
 		</div>
 	</div>
-
 
 </div>

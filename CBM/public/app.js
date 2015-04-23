@@ -9,9 +9,9 @@ config(['$routeProvider', function($routeProvider) {
 		templateUrl: 'views/browse.html',
 		controller: 'MainController'
 	}).
-	when('/info', {
+	when('/info/:id', {
 		templateUrl: 'views/info.html',
-		controller: 'MainController'
+		controller: 'ComicDetailController'
 	}).
 	when('/login', {
 		templateUrl: 'views/login.html',
@@ -26,12 +26,9 @@ config(['$routeProvider', function($routeProvider) {
 		controller: 'MainController'
 	})
 	
-	
-
-
 }]);
 
 angular.module('MyApp')
 .controller('MainController', ['$scope', function($scope) {
 	//this is a placeholder, change it in the next iteration
-}]);	
+}])

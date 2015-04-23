@@ -14,6 +14,16 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static(__dirname + '/public')); 
 
+app.get('/comics/:id', function(req,res){
+
+  var id = req.params.id;
+  connectionpool.getConnection(function(err, connection){
+    connection.query('Select comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description from comics join series on comics.series_id=series.idseries where idcomics = ?', id, function(err, rows, fields){
+      res.send(rows);
+    })
+  })
+});
+
 app.get('/comics', function(req,res){
   connectionpool.getConnection(function(err, connection) {
     if (err) {
@@ -25,7 +35,7 @@ app.get('/comics', function(req,res){
       });
     } 
     else {
-      connection.query('Select comics.issue, series.name, series.publisher,comics.release_date, comics.cover from comics join series on comics.series_id=series.idseries',  function(err, rows, fields) {
+      connection.query('Select comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description from comics join series on comics.series_id=series.idseries',  function(err, rows, fields) {
         if (err) {
           console.error(err);
           res.statusCode = 500;
