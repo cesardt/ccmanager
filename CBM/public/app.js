@@ -7,7 +7,7 @@ config(['$routeProvider', function($routeProvider) {
 	}).
 	when('/browse', {
 		templateUrl: 'views/browse.html',
-		controller: 'MainController'
+		controller: 'ListController'
 	}).
 	when('/info/:id', {
 		templateUrl: 'views/info.html',

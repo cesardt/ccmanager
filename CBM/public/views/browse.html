@@ -1,35 +1,22 @@
 <div class="centered divbottom">
 	Filter By: 
-	<select placeholder="Series">
-		 <option value="" disabled selected>All Series</option>
+	<select ng-model = 'series' ng-change = 'filterSeries()' ng-options='title.name for title in series'>
+		 <option value="">--Series--</option>
 	</select>
 	<input type="text" placeholder="Search Title" style="float:right;"></input>
 </div>
 <div class="centered divbottom" style="padding-left:60px">
 	
-	<select placeholder="Series">
-		 <option value="" disabled selected>Publisher</option>
+	<select ng-model = 'publishers' ng-options='element.publisher for element in publishers'>
+		 <option value="">--Publisher--</option>
 	</select>
 
 </div>
 
 <div class="row">
 	<div class="centered">
-		<div class="row divbottom">
-			<a href="info"><img src="images/scarlet.jpg" class="imagecar" ></a>
-			<a href="info"><img src="images/batwoman.jpg" class="imagecar"></a>
-			<a href="info"><img src="images/SquirrelGirl3.jpg" class="imagecar"></a>
-			<a href="info"><img src="images/Batman7.jpg" class="imagecar"></a>
-		</div>
-		<div class="row divbottom">
-			<a href="info"><img src="images/batgirl35.jpg" class="imagecar"></a>
-			<a href="info"><img src="images/houseofm.jpg" class="imagecar" ></a>
-			<a href="info"><img src="images/aquamanV.jpg" class="imagecar"></a>
-			<a href="info"><img src="images/ASM1.jpg" class="imagecar"></a>
-		</div>
-		<div class="row divbottom	">
-			<a href="info"><img src="images/btmr1.jpg" class="imagecar"></a>
-			<a href="info"><img src="images/batmanrobin39.jpg" class="imagecar"></a>
+		<div class="col-md-3" ng-repeat= "element in comics">
+			<a href={{"info/"+element.idcomics}}><img src={{element.cover}} class="imagecar"></a>
 		</div>
 	</div>
 </div>

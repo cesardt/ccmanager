@@ -35,7 +35,7 @@ app.get('/comics', function(req,res){
       });
     } 
     else {
-      connection.query('Select comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description from comics join series on comics.series_id=series.idseries',  function(err, rows, fields) {
+      connection.query('Select comics.idcomics,comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description, comics.series_id from comics join series on comics.series_id=series.idseries',  function(err, rows, fields) {
         if (err) {
           console.error(err);
           res.statusCode = 500;
@@ -49,6 +49,26 @@ app.get('/comics', function(req,res){
       });
     }
   });
+});
+
+app.get('/series', function(req,res){
+
+  var id = req.params.id;
+  connectionpool.getConnection(function(err, connection){
+    connection.query('Select * from series', function(err, rows, fields){
+      res.send(rows);
+    })
+  })
+});
+
+app.get('/publishers', function(req,res){
+
+  var id = req.params.id;
+  connectionpool.getConnection(function(err, connection){
+    connection.query('Select distinct publisher from series', function(err, rows, fields){
+      res.send(rows);
+    })
+  })
 });
 
 app.post('/add_user', function(req,res){
