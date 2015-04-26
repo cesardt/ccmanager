@@ -63,12 +63,21 @@ app.get('/series', function(req,res){
 
 app.get('/publishers', function(req,res){
 
-  var id = req.params.id;
   connectionpool.getConnection(function(err, connection){
     connection.query('Select distinct publisher from series', function(err, rows, fields){
       res.send(rows);
-    })
-  })
+    });
+  });
+});
+
+app.get('/review', function(req,res){
+  var user_id = req.body.user_id;
+  var comic_id = req.body.comic_id;
+  connectionpool.getConnection(function(err, connection){
+    connection.query('Select * from reviews where user_id = ? and comics_id = ?',user_id,comic_id, function(err, rows, fields){
+      res.send(rows);
+    });
+  });
 });
 
 app.post('/add_user', function(req,res){
@@ -131,6 +140,44 @@ app.post('/add_comic', function(req,res){
       });
   });
 });
+
+app.post('/add_review', function(req, res){
+  connectionpool.getConnection(function(req, res){
+
+    if(err){
+       console.error('CONNECTION error: ',err);
+      res.statusCode = 503;
+      res.send({
+      result: 'error',
+      err: err.code
+      });
+    }
+    else{
+
+      review = {
+        content: req.body.content,
+        score: req.body.score,
+        user_id: req.body.user_id,
+        comics_id: req.body.comic_id
+      }
+
+      connection.query("INSERT into reviews set ?", review, function(err, rows, fields){
+        if (err) {
+          console.error(err);
+          res.statusCode = 500;
+          res.send({
+            result: 'error',
+            err: err.code
+          });
+        }
+        res.send(rows);
+        connection.release();
+      });
+    }
+
+  });
+});
+
 app.delete('/delete_user', function(req,res){
 
   connectionpool.getConnection(function(err, connection) {
@@ -160,26 +207,14 @@ app.delete('/delete_user', function(req,res){
   });
 });
 
-/*app.delete('/delete_user_comic', function(req,res){
+app.delete('/delete_user_comic', function(req,res){
 
   var userid;
 
   connectionpool.getConnection(function(err, connection) {
     connection.query('SELECT iduser from user where mail = ?', req.body.mail, function(err, rows, fields) {
       userid=rows[0].iduser;
-    });
 
-  connectionpool.getConnection(function(err, connection) {
-
-    if (err) {
-      console.error('CONNECTION error: ',err);
-      res.statusCode = 503;
-      res.send({
-        result: 'error',
-        err: err.code
-      });
-    } 
-    else {
       connection.query('DELETE from user_has_comics where user_id = ? AND comics_id = ?', [userid, req.body.comic_id], function(err, rows, fields) {
         if (err) {
           console.error(err);
@@ -191,10 +226,10 @@ app.delete('/delete_user', function(req,res){
         }
         res.send(rows);
         connection.release();
-      });
-    }
+        });
+    });
   });
-});*/
+});
 
 app.put('/update_password/', function(req,res){
 
@@ -253,6 +288,43 @@ app.put('/update_mail/', function(req,res){
         connection.release();
       });
     }
+  });
+});
+
+app.put('/update_review', function(req, res){
+  connectionpool.getConnection(function(req, res){
+
+    if(err){
+       console.error('CONNECTION error: ',err);
+      res.statusCode = 503;
+      res.send({
+      result: 'error',
+      err: err.code
+      });
+    }
+    else{
+
+      review = {
+        content: req.body.content,
+        score: req.body.score,
+        user_id: req.body.user_id,
+        comics_id: req.body.comic_id
+      }
+
+      connection.query("UPDATE reviews set ? where user_id = ? and comics_id = ?", review, review.user_id, review.comics_id, function(err, rows, fields){
+        if (err) {
+          console.error(err);
+          res.statusCode = 500;
+          res.send({
+            result: 'error',
+            err: err.code
+          });
+        }
+        res.send(rows);
+        connection.release();
+      });
+    }
+
   });
 });
 
