@@ -1,4 +1,4 @@
-angular.module('MyApp', ['ui.bootstrap','angular-carousel']).
+angular.module('MyApp', ['ui.bootstrap','ngCookies']).
 config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
 	when('/', {
@@ -19,7 +19,7 @@ config(['$routeProvider', function($routeProvider) {
 	}).
 	when('/signup', {
 		templateUrl: 'views/signup.html',
-		controller: 'MainController'
+		controller: 'SignUpController'
 	}).
 	when('/user', {
 		templateUrl: 'views/user.html',
@@ -29,6 +29,13 @@ config(['$routeProvider', function($routeProvider) {
 }]);
 
 angular.module('MyApp')
-.controller('MainController', ['$scope', function($scope) {
-	//this is a placeholder, change it in the next iteration
+.controller('MainController', ['$scope','$rootScope','$cookieStore', function($scope,$rootScope, $cookieStore) {
+
+	var init = function () {
+		var c= $cookieStore.get('mail')
+		alert(c);		
+	};
+
+	init();
+
 }])

@@ -1,6 +1,9 @@
 var express    = require("express");
 var mysql      = require('mysql');
 var bodyParser = require('body-parser');
+var bcrypt = require('bcrypt');
+var salt = bcrypt.genSaltSync(10);
+
 
 
 var  connectionpool = mysql.createPool({
@@ -81,10 +84,10 @@ app.get('/review', function(req,res){
 });
 
 app.post('/add_user', function(req,res){
-
+  
   var data={
     mail:req.body.mail, 
-    password: req.body.password
+    password: bcrypt.hashSync(req.body.password, salt)
   };
   connectionpool.getConnection(function(err, connection) {
 
