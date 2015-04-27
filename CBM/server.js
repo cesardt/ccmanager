@@ -3,7 +3,9 @@ var mysql      = require('mysql');
 var bodyParser = require('body-parser');
 var bcrypt = require('bcrypt');
 var salt = bcrypt.genSaltSync(10);
-
+var passwordHash = require('password-hash');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
 
 
 var  connectionpool = mysql.createPool({
@@ -84,11 +86,45 @@ app.get('/review', function(req,res){
 });
 
 app.post('/add_user', function(req,res){
+  bcrypt.genSalt(10, function(err, salt) {
+    bcrypt.hash(req.body.password, salt, function(err, hash) {
+      var data={
+        mail:req.body.mail, 
+        password: hash
+      };
+      connectionpool.getConnection(function(err, connection) {
+
+        if (err) {
+          console.error('CONNECTION error: ',err);
+          res.statusCode = 503;
+          res.send({
+            result: 'error',
+            err: err.code
+          });
+        } 
+        else {
+          connection.query('INSERT into user set ?', data, function(err, rows, fields) {
+            if (err) {
+              console.error(err);
+              res.statusCode = 500;
+              res.send({
+                result: 'error',
+                err: err.code
+              });
+            }
+            res.send(rows);
+            connection.release();
+          });
+        }
+      });
+    });
+  });
   
-  var data={
-    mail:req.body.mail, 
-    password: bcrypt.hashSync(req.body.password, salt)
-  };
+});
+
+app.post('/login', function(req,res){
+
+  var hash="";
   connectionpool.getConnection(function(err, connection) {
 
     if (err) {
@@ -100,7 +136,8 @@ app.post('/add_user', function(req,res){
       });
     } 
     else {
-      connection.query('INSERT into user set ?', data, function(err, rows, fields) {
+
+      connection.query('SELECT password from user where mail = ?', req.body.mail , function(err, rows, fields) {
         if (err) {
           console.error(err);
           res.statusCode = 500;
@@ -109,12 +146,24 @@ app.post('/add_user', function(req,res){
             err: err.code
           });
         }
-        res.send(rows);
-        connection.release();
-      });
+        if(rows.length >0){
+
+         hash=rows[0].password
+       }
+       console.log(hash);
+       bcrypt.compare(req.body.password, hash, function(err, response) {
+        res.send(response);
+
+  }); 
+       
+
+       connection.release();
+     });
     }
   });
 });
+
+
 
 app.post('/add_comic', function(req,res){
   var data;
@@ -128,8 +177,7 @@ app.post('/add_comic', function(req,res){
         comic: req.body.comic_id
       };
       console.log(data);
-    });
-    connection.query('INSERT into user_has_comics set ? ', data, function(err, rows, fields) {
+      connection.query('INSERT into user_has_comics set ? ', data, function(err, rows, fields) {
         if (err) {
           console.error(err);
           res.statusCode = 500;
@@ -141,6 +189,9 @@ app.post('/add_comic', function(req,res){
         res.send(rows);
         connection.release();
       });
+    });
+
+
   });
 });
 
@@ -148,37 +199,37 @@ app.post('/add_review', function(req, res){
   connectionpool.getConnection(function(req, res){
 
     if(err){
-       console.error('CONNECTION error: ',err);
-      res.statusCode = 503;
-      res.send({
+     console.error('CONNECTION error: ',err);
+     res.statusCode = 503;
+     res.send({
       result: 'error',
       err: err.code
-      });
-    }
-    else{
+    });
+   }
+   else{
 
-      review = {
-        content: req.body.content,
-        score: req.body.score,
-        user_id: req.body.user_id,
-        comics_id: req.body.comic_id
+    review = {
+      content: req.body.content,
+      score: req.body.score,
+      user_id: req.body.user_id,
+      comics_id: req.body.comic_id
+    }
+
+    connection.query("INSERT into reviews set ?", review, function(err, rows, fields){
+      if (err) {
+        console.error(err);
+        res.statusCode = 500;
+        res.send({
+          result: 'error',
+          err: err.code
+        });
       }
+      res.send(rows);
+      connection.release();
+    });
+  }
 
-      connection.query("INSERT into reviews set ?", review, function(err, rows, fields){
-        if (err) {
-          console.error(err);
-          res.statusCode = 500;
-          res.send({
-            result: 'error',
-            err: err.code
-          });
-        }
-        res.send(rows);
-        connection.release();
-      });
-    }
-
-  });
+});
 });
 
 app.delete('/delete_user', function(req,res){
@@ -229,7 +280,7 @@ app.delete('/delete_user_comic', function(req,res){
         }
         res.send(rows);
         connection.release();
-        });
+      });
     });
   });
 });
@@ -298,37 +349,37 @@ app.put('/update_review', function(req, res){
   connectionpool.getConnection(function(req, res){
 
     if(err){
-       console.error('CONNECTION error: ',err);
-      res.statusCode = 503;
-      res.send({
+     console.error('CONNECTION error: ',err);
+     res.statusCode = 503;
+     res.send({
       result: 'error',
       err: err.code
-      });
-    }
-    else{
+    });
+   }
+   else{
 
-      review = {
-        content: req.body.content,
-        score: req.body.score,
-        user_id: req.body.user_id,
-        comics_id: req.body.comic_id
+    review = {
+      content: req.body.content,
+      score: req.body.score,
+      user_id: req.body.user_id,
+      comics_id: req.body.comic_id
+    }
+
+    connection.query("UPDATE reviews set ? where user_id = ? and comics_id = ?", review, review.user_id, review.comics_id, function(err, rows, fields){
+      if (err) {
+        console.error(err);
+        res.statusCode = 500;
+        res.send({
+          result: 'error',
+          err: err.code
+        });
       }
+      res.send(rows);
+      connection.release();
+    });
+  }
 
-      connection.query("UPDATE reviews set ? where user_id = ? and comics_id = ?", review, review.user_id, review.comics_id, function(err, rows, fields){
-        if (err) {
-          console.error(err);
-          res.statusCode = 500;
-          res.send({
-            result: 'error',
-            err: err.code
-          });
-        }
-        res.send(rows);
-        connection.release();
-      });
-    }
-
-  });
+});
 });
 
 app.get('*', function(req, res) {

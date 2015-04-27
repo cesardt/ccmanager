@@ -10,7 +10,6 @@ angular.module('MyApp')
 
      $http.post("/add_user",set).success(function(response){
         $cookieStore.put('mail',$scope.mail );
-        
         $location.path( "/" );
 
 

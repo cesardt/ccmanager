@@ -15,7 +15,7 @@ config(['$routeProvider', function($routeProvider) {
 	}).
 	when('/login', {
 		templateUrl: 'views/login.html',
-		controller: 'MainController'
+		controller: 'LoginController'
 	}).
 	when('/signup', {
 		templateUrl: 'views/signup.html',
@@ -31,11 +31,6 @@ config(['$routeProvider', function($routeProvider) {
 angular.module('MyApp')
 .controller('MainController', ['$scope','$rootScope','$cookieStore', function($scope,$rootScope, $cookieStore) {
 
-	var init = function () {
-		var c= $cookieStore.get('mail')
-		alert(c);		
-	};
-
-	init();
+	
 
 }])

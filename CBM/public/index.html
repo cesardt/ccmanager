@@ -7,15 +7,17 @@
   <link rel="stylesheet" href="stylesheets/style.css" />
 </head>
 <body class="edgy">
-  <div>
+  <div ng-controller="NavBarController">
     <nav class="navbar navbar-inverse" >
      <ul class="nav navbar-nav">
       <li ><a href="#">Home</a></li>
       <li><a href="/browse">All Comics</a></li>
     </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li class="active"><a href="/login">Login </a></li>
-      <li><a href="/signup">SignUp</a></li>
+      <li ng-show="!exists()" ><a href="/login">Login </a></li>
+      <li ng-show="exists()" ><a href="/user">{{user}}</a></li>
+      <li ng-show="!exists()"><a href="/signup">SignUp</a></li>
+      <li ng-show="exists()"><a ng-click="logout()">Log Out</a></li>
     </nav>
   </div>
 
@@ -39,6 +41,8 @@
   <script src ="controllers/comicDetail.js"></script>
   <script src ="controllers/ListController.js"></script>
   <script src ="controllers/SignUpController.js"></script>
+  <script src ="controllers/NavBarController.js"></script>
+   <script src ="controllers/LoginController.js"></script>
 
 
 
