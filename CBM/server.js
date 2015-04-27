@@ -95,11 +95,11 @@ app.get('/user_has_comic/', function(req,res){
 
   console.log(req.query);
   connectionpool.getConnection(function(err,connection){
-      connection.query('SELECT iduser from user where mail = ?', req.query.mail, function(err, rows, fields) {
-        userid=rows[0].iduser;
-        connection.query('Select * from user_has_comics where user_id = ? and comics_id = ?', [userid, req.query.comic], function(err, rows, fields){
-          res.send(rows);
-        });
+    connection.query('SELECT iduser from user where mail = ?', req.query.mail, function(err, rows, fields) {
+      userid=rows[0].iduser;
+      connection.query('Select * from user_has_comics where user_id = ? and comics_id = ?', [userid, req.query.comic], function(err, rows, fields){
+        res.send(rows);
+      });
     });
   });
 })
@@ -173,7 +173,7 @@ app.post('/login', function(req,res){
        bcrypt.compare(req.body.password, hash, function(err, response) {
         res.send(response);
 
-  }); 
+      }); 
        
 
        connection.release();
@@ -182,20 +182,16 @@ app.post('/login', function(req,res){
   });
 });
 
-
-
 app.post('/add_comic', function(req,res){
   var data;
   var userid;
-
   connectionpool.getConnection(function(err, connection) {
     connection.query('SELECT iduser from user where mail = ?', req.body.mail, function(err, rows, fields) {
       userid=rows[0].iduser;
       data={
         user_id: userid, 
-        comic: req.body.comic_id
+        comics_id: req.body.comic_id
       };
-      console.log(data);
       connection.query('INSERT into user_has_comics set ? ', data, function(err, rows, fields) {
         if (err) {
           console.error(err);
@@ -208,8 +204,8 @@ app.post('/add_comic', function(req,res){
         res.send(rows);
         connection.release();
       });
+      console.log(data);
     });
-
 
   });
 });
@@ -217,7 +213,6 @@ app.post('/add_comic', function(req,res){
 app.post('/add_review', function(req, res){
   console.log(req.body);
   connectionpool.getConnection(function(err, connection){
-
     if(err){
      console.error('CONNECTION error: ',err);
      res.statusCode = 503;
@@ -227,60 +222,30 @@ app.post('/add_review', function(req, res){
     });
    }
    else{
-
-    review = {
-      content: req.body.content,
-      score: req.body.score,
-      user_id: req.body.user_id,
-      comics_id: req.body.comic_id
-    }
-<<<<<<< HEAD
-
-    connection.query("INSERT into reviews set ?", review, function(err, rows, fields){
-      if (err) {
-        console.error(err);
-        res.statusCode = 500;
-        res.send({
-          result: 'error',
-          err: err.code
-        });
+    connection.query('SELECT iduser from user where mail = ?', req.body.mail, function(err, rows, fields) {
+      var userid=rows[0].iduser;
+      review = {
+        content: req.body.content,
+        score: req.body.score,
+        user_id: userid,
+        comics_id: req.body.comic_id
       }
-      res.send(rows);
-      connection.release();
-    });
-  }
-
-});
-=======
-    else{
-      connection.query('SELECT iduser from user where mail = ?', req.body.mail, function(err, rows, fields) {
-        var userid=rows[0].iduser;
-        review = {
-          content: req.body.content,
-          score: req.body.score,
-          user_id: userid,
-          comics_id: req.body.comic_id
+      connection.query("INSERT into reviews set ?", review, function(err, rows, fields){
+        if (err) {
+          console.error(err);
+          res.statusCode = 500;
+          res.send({
+            result: 'error',
+            err: err.code
+          });
         }
-
-        connection.query("INSERT into reviews set ?", review, function(err, rows, fields){
-          if (err) {
-            console.error(err);
-            res.statusCode = 500;
-            res.send({
-              result: 'error',
-              err: err.code
-            });
-          }
-          res.send(rows);
-          connection.release();
-        });
-        
+        res.send(rows);
+        connection.release();
       });
 
-    }
-
-  });
->>>>>>> origin/master
+    });
+  }
+});
 });
 
 app.delete('/delete_user', function(req,res){
