@@ -5,43 +5,81 @@ angular.module('MyApp')
         $scope.series = [];
         $scope.publishers = [];
         $scope.searched = [];
+        $scope.currentPage = 1;
+        $scope.pages = [];
+        $scope.filteredComics = [];
+        $scope.filteredSeries = [];
+        $scope.comicsInPage = [];
+        $scope.publishersFilter = "";
+        $scope.seriesFilter = "";
+
 
         $http.get("/comics").success(function(response){
             $scope.comics = response;
+            $scope.filteredComics = response;
+            $scope.filter();
         });
 
         $http.get("/series").success(function(response){
             $scope.series = response;
+            $scope.filteredSeries = response;
         });
 
         $http.get("/publishers").success(function(response){
             $scope.publishers = response;
         });
 
-        console.log($scope);
+        $scope.filter = function(){
+            var shownComics = [];
+            $scope.filteredComics = $scope.comics;
+            $scope.filteredSeries = $scope.series;
 
-        $scope.filterSeries = function(){
+            if($scope.publishersFilter != "" && $scope.publishersFilter != null){
+                $scope.filteredSeries = $scope.filteredSeries.filter(isFromPublisher);
 
-            function belongsTo(value){
-                if(value.series_id == $scope.title.idseries){
-                    return value;
+                function isFromPublisher(value){
+                    if(value.publisher == $scope.publishersFilter.publisher){
+                        return value;
+                    }
+                }
+
+            }
+            else{
+                $scope.filteredSeries = $scope.series;
+            }
+
+            if($scope.seriesFilter != "" && $scope.seriesFilter != null){
+                $scope.filteredComics = $scope.filteredComics.filter(isFromSeries);
+                function isFromSeries(value){
+                    if(value.series_id == $scope.seriesFilter.idseries){
+                        console.log(value);
+                        return value;
+                    }
                 }
             }
 
-            var filtered = $scope.comics.filter(belongsTo);
-            $scope.comics = filtered;
+            for(var i = 0; i < 12; i++){
+                if(i >= $scope.filteredComics.length){
+                    break;
+                }
+                    
+                shownComics[i] = $scope.filteredComics[(12*($scope.currentPage-1))+i];
+            }
+
+            $scope.comicsInPage = shownComics;
+
+            $scope.pages = [];
+            for(var i = 0; i < Math.ceil($scope.filteredComics.length/12); i++){
+                $scope.pages[i] = i+1;
+            }
+            console.log($scope.filteredComics);
+            console.log($scope.comicsInPage);
         }
 
-        $scope.filterByPublishers = function(){
-            function belongsToP(value){
-                console.log(value);
-                if(value.publishers == $scope.element.publisher){
-                    return value;
-                }
-            }
-
-            var filtered = $scope.comics.filter(belongsToP);
-            $scope.comics = filtered;
+        $scope.goToPage = function(page){
+            console.log(page);
+            $scope.currentPage = page;
+            $scope.filter();
         }
         
 }])

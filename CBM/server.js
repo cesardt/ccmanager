@@ -76,14 +76,33 @@ app.get('/publishers', function(req,res){
 });
 
 app.get('/review', function(req,res){
-  var user_id = req.body.user_id;
-  var comic_id = req.body.comic_id;
+  var user_id = req.query.mail;
+  var comic_id = req.query.comic;
   connectionpool.getConnection(function(err, connection){
-    connection.query('Select * from reviews where user_id = ? and comics_id = ?',user_id,comic_id, function(err, rows, fields){
-      res.send(rows);
+
+    connection.query('SELECT iduser from user where mail = ?', req.query.mail, function(err, rows, fields) {
+      userid=rows[0].iduser;
+      connection.query('Select * from reviews where user_id = ? and comics_id = ?',user_id,comic_id, function(err, rows, fields){
+        res.send(rows);
+      });
     });
   });
 });
+
+app.get('/user_has_comic/', function(req,res){
+
+  var userid="";
+
+  console.log(req.query);
+  connectionpool.getConnection(function(err,connection){
+      connection.query('SELECT iduser from user where mail = ?', req.query.mail, function(err, rows, fields) {
+        userid=rows[0].iduser;
+        connection.query('Select * from user_has_comics where user_id = ? and comics_id = ?', [userid, req.query.comic], function(err, rows, fields){
+          res.send(rows);
+        });
+    });
+  });
+})
 
 app.post('/add_user', function(req,res){
   bcrypt.genSalt(10, function(err, salt) {
@@ -196,7 +215,8 @@ app.post('/add_comic', function(req,res){
 });
 
 app.post('/add_review', function(req, res){
-  connectionpool.getConnection(function(req, res){
+  console.log(req.body);
+  connectionpool.getConnection(function(err, connection){
 
     if(err){
      console.error('CONNECTION error: ',err);
@@ -214,6 +234,7 @@ app.post('/add_review', function(req, res){
       user_id: req.body.user_id,
       comics_id: req.body.comic_id
     }
+<<<<<<< HEAD
 
     connection.query("INSERT into reviews set ?", review, function(err, rows, fields){
       if (err) {
@@ -230,6 +251,36 @@ app.post('/add_review', function(req, res){
   }
 
 });
+=======
+    else{
+      connection.query('SELECT iduser from user where mail = ?', req.body.mail, function(err, rows, fields) {
+        var userid=rows[0].iduser;
+        review = {
+          content: req.body.content,
+          score: req.body.score,
+          user_id: userid,
+          comics_id: req.body.comic_id
+        }
+
+        connection.query("INSERT into reviews set ?", review, function(err, rows, fields){
+          if (err) {
+            console.error(err);
+            res.statusCode = 500;
+            res.send({
+              result: 'error',
+              err: err.code
+            });
+          }
+          res.send(rows);
+          connection.release();
+        });
+        
+      });
+
+    }
+
+  });
+>>>>>>> origin/master
 });
 
 app.delete('/delete_user', function(req,res){
