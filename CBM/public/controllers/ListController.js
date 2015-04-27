@@ -81,9 +81,5 @@ angular.module('MyApp')
             $scope.currentPage = page;
             $scope.filter();
         }
-
-        $scope.isFromSeries = function(value){
-
-        }
         
 }])
