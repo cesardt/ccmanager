@@ -52,7 +52,6 @@ angular.module('MyApp')
                 $scope.filteredComics = $scope.filteredComics.filter(isFromSeries);
                 function isFromSeries(value){
                     if(value.series_id == $scope.seriesFilter.idseries){
-                        console.log(value);
                         return value;
                     }
                 }
@@ -63,10 +62,10 @@ angular.module('MyApp')
                     break;
                 }
                     
-                shownComics[i] = $scope.filteredComics[(12*($scope.currentPage-1))+i];
+               $scope.comicsInPage[i] = $scope.filteredComics[(12*($scope.currentPage-1))+i];
             }
 
-            $scope.comicsInPage = shownComics;
+            //$scope.comicsInPage = shownComics;
 
             $scope.pages = [];
             for(var i = 0; i < Math.ceil($scope.filteredComics.length/12); i++){

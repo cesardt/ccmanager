@@ -11,15 +11,15 @@
 </div>
 
 <div class="row">
-	<div class="col-md-6">
+	<div class="col-md-3">
 		<img class="imagedesc" src="{{cover}}" ></img>
 	</div>
-	<div class="col-md-6">
+	<div class="col-md-4">
 		<p class="desc">{{description}}</p>
 	</div >
 </div>
 
-<div ng-show = "isLogged" class="row">
+<div ng-show = "isLogged && hasComic" class="row centered">
 	<div class="col-md-12">
 
 		<h2>
@@ -43,13 +43,33 @@
 	<div class="col-md-12">
 		<div class="panel-body">
 			<input ng-model = "review.content" type="text" style="height:100px;width:100%;"></input>
-			<button type="button" ng-click = "addReview()" class="btn-lg btn-primary button-submit">Submit</span></button>
+			<button ng-hide="hasReviewed" type="button" ng-click = "addReview()" class="btn-lg btn-primary button-submit">Submit</span></button>
+			<button ng-show="hasReviewed" type="button" ng-click = "updateReview()" class="btn-lg btn-primary button-submit">Submit</span></button>
 		</div>
 	</div>
 </div>
 <div class = "col-md-12">
-	<div ng-repeat="review in reviews">
-		{{review.content}}
+	<div class="centered" ng-repeat="review in reviews">
+		<div class="row">
+			<div class="stars">
+				<form action="">
+					<input ng-model = "review.score" class="star star-5 disabled" id="star-5" type="radio" value = 5 name="star"/>
+					<label class="star star-5" for="star-5"></label>
+					<input ng-model = "review.score" class="star star-4" id="star-4" type="radio" value = 4 name="star"/>
+					<label class="star star-4" for="star-4"></label>
+					<input ng-model = "review.score" class="star star-3" id="star-3" type="radio" value = 3 name="star"/>
+					<label class="star star-3" for="star-3"></label>
+					<input ng-model = "review.score" class="star star-2" id="star-2" type="radio" value = 2 name="star"/>
+					<label class="star star-2" for="star-2"></label>
+					<input ng-model = "review.score" class="star star-1" id="star-1" type="radio" value = 1 name="star"/>
+					<label class="star star-1" for="star-1"></label>
+				</form>
+			</div>
+		</div>
+		<div class="row">
+			{{review.content}}
+		</div>
+		<hr>
 	</div>
 </div>
 

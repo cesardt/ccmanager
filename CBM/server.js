@@ -82,12 +82,22 @@ app.get('/review', function(req,res){
 
     connection.query('SELECT iduser from user where mail = ?', req.query.mail, function(err, rows, fields) {
       userid=rows[0].iduser;
-      connection.query('Select * from reviews where user_id = ? and comics_id = ?',user_id,comic_id, function(err, rows, fields){
+      connection.query('Select * from reviews where user_id = ? and comics_id = ?',[userid,comic_id], function(err, rows, fields){
         res.send(rows);
       });
     });
   });
 });
+
+app.get('/reviews', function(req,res){
+  var comic_id = req.query.comic;
+  connectionpool.getConnection(function(err, connection){
+    connection.query('Select * from reviews where comics_id = ?',comic_id, function(err, rows, fields){
+      res.send(rows);
+    });
+  });
+});
+
 
 app.get('/user_has_comic/', function(req,res){
 
@@ -362,7 +372,7 @@ app.put('/update_mail/', function(req,res){
 });
 
 app.put('/update_review', function(req, res){
-  connectionpool.getConnection(function(req, res){
+  connectionpool.getConnection(function(err, connection){
 
     if(err){
      console.error('CONNECTION error: ',err);
@@ -381,7 +391,7 @@ app.put('/update_review', function(req, res){
       comics_id: req.body.comic_id
     }
 
-    connection.query("UPDATE reviews set ? where user_id = ? and comics_id = ?", review, review.user_id, review.comics_id, function(err, rows, fields){
+    connection.query("UPDATE reviews set ? where user_id = ? and comics_id = ?", [review, review.user_id, review.comics_id], function(err, rows, fields){
       if (err) {
         console.error(err);
         res.statusCode = 500;
@@ -390,12 +400,13 @@ app.put('/update_review', function(req, res){
           err: err.code
         });
       }
+      console.log("Updated review");
       res.send(rows);
       connection.release();
     });
   }
 
-});
+  });
 });
 
 app.get('*', function(req, res) {
