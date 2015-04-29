@@ -1,5 +1,5 @@
 angular.module('MyApp')
-.controller('ComicDetailController', ['$scope', '$http', '$routeParams', '$cookieStore', function($scope, $http, $routeParams, $cookieStore) {
+.controller('ComicDetailController', ['$scope', '$http', '$routeParams', '$cookieStore', '$window', function($scope, $http, $routeParams, $cookieStore, $window) {
 
         $scope.title = "No title found";
         $scope.issue =  -1;
@@ -58,18 +58,21 @@ angular.module('MyApp')
             }
 
             $http.post('/add_comic',set).success(function(response){
-                $scope.$apply();
+                $window.location.reload();
             });
         }
         
         $scope.removeFromCollection = function(){
             var set = {
                 comic_id : $scope.comic_id,
-                mail : $scope.user_mail
+                mail : $cookieStore.get('mail')
             }
 
-            $http.delete('/delete_user_comic', set).success(function(response){
-                $scope.$apply();
+            console.log($cookieStore.get('mail'));
+
+
+            $http.put('/delete_user_comic', set).success(function(response){
+                $window.location.reload();
             });
         }
 
@@ -82,7 +85,7 @@ angular.module('MyApp')
             }
 
             $http.post('/add_review', set).success(function(response){
-                $scope.$apply();
+                $window.location.reload();
             });
         }
 
@@ -95,7 +98,7 @@ angular.module('MyApp')
             }
 
             $http.put('/update_review', set).success(function(response){
-                $scope.$apply();
+                $window.location.reload();
             });
         }
 }])

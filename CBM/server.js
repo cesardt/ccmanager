@@ -287,13 +287,15 @@ app.delete('/delete_user', function(req,res){
   });
 });
 
-app.delete('/delete_user_comic', function(req,res){
+app.put('/delete_user_comic', function(req,res){
 
   var userid;
 
   connectionpool.getConnection(function(err, connection) {
     connection.query('SELECT iduser from user where mail = ?', req.body.mail, function(err, rows, fields) {
+      console.log("Mail: "+req.body.mail);
       userid=rows[0].iduser;
+      console.log("Mail: "+userid);
 
       connection.query('DELETE from user_has_comics where user_id = ? AND comics_id = ?', [userid, req.body.comic_id], function(err, rows, fields) {
         if (err) {
