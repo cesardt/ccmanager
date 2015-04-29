@@ -15,8 +15,8 @@
 
 <div class="row">
 	<div class="centered">
-		<div class="col-md-3" ng-repeat= "element in comicsInPage">
-			<a href={{"info/"+element.idcomics}}><img src={{element.cover}} class="imagecar"></a>
+		<div class="col-md-3" ng-repeat= "element in comicsInPage | limitTo: 12">
+			<a href={{"info/"+element.idcomics}}><img style="width:150px;height:225px" src={{element.cover}} class="imagecar"></a>
 			<div class="row"><hr></div>
 		</div>
 	</div>

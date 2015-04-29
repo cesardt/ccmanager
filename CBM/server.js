@@ -25,6 +25,7 @@ app.get('/comics/:id', function(req,res){
   connectionpool.getConnection(function(err, connection){
     connection.query('Select comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description from comics join series on comics.series_id=series.idseries where idcomics = ?', id, function(err, rows, fields){
       res.send(rows);
+      connection.release();
     })
   })
 });
@@ -62,6 +63,7 @@ app.get('/series', function(req,res){
   connectionpool.getConnection(function(err, connection){
     connection.query('Select * from series', function(err, rows, fields){
       res.send(rows);
+      connection.release();
     })
   })
 });
@@ -71,6 +73,7 @@ app.get('/publishers', function(req,res){
   connectionpool.getConnection(function(err, connection){
     connection.query('Select distinct publisher from series', function(err, rows, fields){
       res.send(rows);
+      connection.release();
     });
   });
 });
@@ -84,6 +87,7 @@ app.get('/review', function(req,res){
       userid=rows[0].iduser;
       connection.query('Select * from reviews where user_id = ? and comics_id = ?',[userid,comic_id], function(err, rows, fields){
         res.send(rows);
+        connection.release();
       });
     });
   });
@@ -94,6 +98,7 @@ app.get('/reviews', function(req,res){
   connectionpool.getConnection(function(err, connection){
     connection.query('Select * from reviews where comics_id = ?',comic_id, function(err, rows, fields){
       res.send(rows);
+      connection.release();
     });
   });
 });
@@ -109,6 +114,7 @@ app.get('/user_has_comic/', function(req,res){
       userid=rows[0].iduser;
       connection.query('Select * from user_has_comics where user_id = ? and comics_id = ?', [userid, req.query.comic], function(err, rows, fields){
         res.send(rows);
+        connection.release();
       });
     });
   });

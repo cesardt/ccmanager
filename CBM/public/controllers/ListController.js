@@ -30,7 +30,7 @@ angular.module('MyApp')
         });
 
         $scope.filter = function(){
-            var shownComics = [];
+            $scope.comicsInPage = [];
             $scope.filteredComics = $scope.comics;
             $scope.filteredSeries = $scope.series;
 
@@ -58,25 +58,20 @@ angular.module('MyApp')
             }
 
             for(var i = 0; i < 12; i++){
-                if(i >= $scope.filteredComics.length){
+                if(i >= $scope.filteredComics.length || ($scope.filteredComics[(12*($scope.currentPage-1))+i]) == undefined){
                     break;
                 }
                     
                $scope.comicsInPage[i] = $scope.filteredComics[(12*($scope.currentPage-1))+i];
             }
 
-            //$scope.comicsInPage = shownComics;
-
             $scope.pages = [];
             for(var i = 0; i < Math.ceil($scope.filteredComics.length/12); i++){
                 $scope.pages[i] = i+1;
             }
-            console.log($scope.filteredComics);
-            console.log($scope.comicsInPage);
         }
 
         $scope.goToPage = function(page){
-            console.log(page);
             $scope.currentPage = page;
             $scope.filter();
         }
