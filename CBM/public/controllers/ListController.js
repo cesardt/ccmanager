@@ -33,11 +33,16 @@ angular.module('MyApp')
             $scope.comicsInPage = [];
             $scope.filteredComics = $scope.comics;
             $scope.filteredSeries = $scope.series;
-
             if($scope.publishersFilter != "" && $scope.publishersFilter != null){
-                $scope.filteredSeries = $scope.filteredSeries.filter(isFromPublisher);
+                $scope.filteredSeries = $scope.filteredSeries.filter(seriesIsFromPublisher);
+                $scope.filteredComics = $scope.filteredComics.filter(comicIsFromPublisher);
+                function seriesIsFromPublisher(value){
+                    if(value.publisher == $scope.publishersFilter.publisher){
+                        return value;
+                    }
+                }
 
-                function isFromPublisher(value){
+                function comicIsFromPublisher(value){
                     if(value.publisher == $scope.publishersFilter.publisher){
                         return value;
                     }
@@ -51,11 +56,13 @@ angular.module('MyApp')
             if($scope.seriesFilter != "" && $scope.seriesFilter != null){
                 $scope.filteredComics = $scope.filteredComics.filter(isFromSeries);
                 function isFromSeries(value){
+                    console.log(value);
                     if(value.series_id == $scope.seriesFilter.idseries){
                         return value;
                     }
                 }
             }
+
 
             for(var i = 0; i < 12; i++){
                 if(i >= $scope.filteredComics.length || ($scope.filteredComics[(12*($scope.currentPage-1))+i]) == undefined){
