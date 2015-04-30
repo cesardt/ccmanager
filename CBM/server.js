@@ -57,6 +57,30 @@ app.get('/comics', function(req,res){
   });
 });
 
+app.get('/weekly_comics', function(req,res){
+  connectionpool.getConnection(function(err, connection){
+    if (err) {
+      console.error('CONNECTION error: ',err);
+      res.statusCode = 503;
+      res.send({
+        result: 'error',
+        err: err.code
+      });
+    }
+    else{
+      connection.query('Select * from comics limit 1', function(err, rows, fields){
+        console.log(rows);
+        date = rows[0].release_date;
+        connection.query('Select comics.idcomics,comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description, comics.series_id from comics join series on comics.series_id=series.idseries', date, function(err, rows, fields){
+          console.log(rows);
+          res.send(rows);
+        });
+
+      });
+    } 
+  });
+});
+
 app.get('/series', function(req,res){
 
   var id = req.params.id;

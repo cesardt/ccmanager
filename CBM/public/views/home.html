@@ -6,10 +6,7 @@
 </div>
 <div class="row">
   <div class="centered">
-    <a href="info"><img src="images/batman7.jpg" class="imagecar" ></a>
-    <a href="info"><img src="images/scarlet.jpg" class="imagecar"></a>
-    <a href="info"><img src="images/batwoman.jpg" class="imagecar"></a>
-    <a href="info"><img src="images/ASM1.jpg" class="imagecar"></a>
+    <a ng-repeat = "comic in comics | limitTo: 4" href={{"info/"+comic.idcomics}}><img src={{comic.cover}} class="imagecar" ></a>
   </div>
 </div>
 
@@ -20,12 +17,7 @@
 </div>
 <div class="row">
   <div class="centered">
-    <a href="info"><img src="images/scarlet.jpg" class="imagecar" ></a>
-    <a href="info"><img src="images/ASM1.jpg" class="imagecar"></a>
-    <a href="info"><img src="images/btmr1.jpg" class="imagecar"></a>
-    <a href="info"><img src="images/houseofm.jpg" class="imagecar"></a>
-
-
+    <a ng-repeat = "comic in marvelComics | limitTo: 4" href={{"info/"+comic.idcomics}}><img src={{comic.cover}} class="imagecar" ></a>
   </div>
 </div>
 
@@ -35,13 +27,7 @@
 </div>
 <div class="row">
   <div class="centered">
-    <a href="info"><img src="images/batman7.jpg" class="imagecar"></a>
-    <a href="info"><img src="images/aquamanV.jpg" class="imagecar"></a>
-    <a href="info"><img src="images/batwoman.jpg" class="imagecar"></a>
-    <a href="info"><img src="images/batgirl35.jpg" class="imagecar"></a>
-    
-
-
+    <a ng-repeat = "comic in dcComics | limitTo: 4" href={{"public/images/batman40.jpg"}}><img src={{comic.cover}} class="imagecar" ></a>
   </div>
 </div>
 <div>
