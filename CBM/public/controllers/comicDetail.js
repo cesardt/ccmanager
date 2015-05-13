@@ -1,59 +1,44 @@
 angular.module('MyApp')
-.controller('ComicDetailController', ['$scope', '$http', '$routeParams', '$cookieStore', '$window', function($scope, $http, $routeParams, $cookieStore, $window) {
+.controller('ComicDetailController', ['$scope', '$routeParams', '$http', '$cookieStore', '$window', 'Comic', 'Review', function($scope, $routeParams, $http, $cookieStore, $window, Comic, Review) {
 
-        $scope.title = "No title found";
-        $scope.issue =  -1;
-        $scope.cover = "/images/noCover.jpg";
-        $scope.description = "The comic was not found or the comic has no description";
-        $scope.comic_id = $routeParams.id;
-        $scope.review = [];
         $scope.reviews = [];
         $scope.hasComic = false;
         $scope.isLogged = false;
         $scope.hasReviewed = false;
 
-
-        $http.get("/comics/"+$scope.comic_id).success(function(response){
-            $scope.title = response[0].name;
-            $scope.issue =  response[0].issue;
-            $scope.cover = response[0].cover;
-            $scope.description = response[0].description;
-
-            if($cookieStore.get('mail') != null){
-                $scope.isLogged = true;
-
-                $http.get("/user_has_comic/?mail="+$cookieStore.get('mail')+"&comic="+$scope.comic_id).success(function(response){
+        if($cookieStore.get('mail') != null){
+            $scope.isLogged = true;
+            Comic.getComic($routeParams.id).success(function(data){
+                $scope.comic = data[0];
+                $http.get("/user_has_comic/?mail="+$cookieStore.get('mail')+"&comic="+$scope.comic.idcomics).success(function(response){
                     if(response.length > 0){
                         $scope.hasComic = true;
                     }
 
                     if($scope.isLogged && $scope.hasComic){
-                        $http.get("/review/?mail="+$cookieStore.get('mail')+"&comic="+$scope.comic_id).success(function(response){
+                        $http.get("/review/?mail="+$cookieStore.get('mail')+"&comic="+$scope.comic.idcomics).success(function(response){
                             if(response.length > 0){
-                                console.log($scope);
                                 $scope.hasReviewed = true;
-                                $scope.review.content = response[0].content; 
-                                $scope.review.score =  response[0].score;
-                                }
+                                Review.getReview($cookieStore.get('mail'),$scope.comic.idcomics).success(function(data){
+                                    $scope.review = data[0];
+                                });
+                            }
 
                         });
                     }
-                    
+                        
                 });
-            }
-
-        });
-
-
-
-        $http.get("/reviews/?comic="+$scope.comic_id).success(function(response){
-            $scope.reviews = response;
-        });
+                Review.getRelatedReviews($scope.comic.idcomics).success(function(data){
+                    $scope.reviews = data;
+                }); 
+            });
+            
+        }
 
         $scope.addToCollection = function(){
 
             var set = {
-                comic_id: $scope.comic_id,
+                comic_id: $scope.comic.idcomics,
                 mail: $cookieStore.get('mail')
             }
 
@@ -64,7 +49,7 @@ angular.module('MyApp')
         
         $scope.removeFromCollection = function(){
             var set = {
-                comic_id : $scope.comic_id,
+                comic_id : $scope.comic.idcomics,
                 mail : $cookieStore.get('mail')
             }
 
@@ -81,7 +66,7 @@ angular.module('MyApp')
                 content: $scope.review.content,
                 score: $scope.review.score,
                 mail: $cookieStore.get('mail'),
-                comic_id: $scope.comic_id
+                comic_id: $scope.comic.idcomics
             }
 
             $http.post('/add_review', set).success(function(response){
@@ -94,11 +79,11 @@ angular.module('MyApp')
                 content: $scope.review.content,
                 score: $scope.review.score,
                 mail: $cookieStore.get('mail'),
-                comic_id: $scope.comic_id
+                comic_id: $scope.comic.idcomics
             }
 
             $http.put('/update_review', set).success(function(response){
                 $window.location.reload();
             });
         }
-}])
+}]);
