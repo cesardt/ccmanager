@@ -223,6 +223,7 @@ app.post('/login', function(req,res){
         result: 'error',
         err: err.code
       });
+      connection.release();
     } 
     else {
 
@@ -234,6 +235,7 @@ app.post('/login', function(req,res){
             result: 'error',
             err: err.code
           });
+          connection.release();
         }
         if(rows.length >0){
 
@@ -242,11 +244,11 @@ app.post('/login', function(req,res){
        console.log(hash);
        bcrypt.compare(req.body.password, hash, function(err, response) {
         res.send(response);
-
+        connection.release();
       }); 
        
 
-       connection.release();
+       
      });
     }
   });

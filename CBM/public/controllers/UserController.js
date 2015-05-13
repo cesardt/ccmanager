@@ -8,7 +8,7 @@ angular.module('MyApp')
 		console.log($scope.comics);
 
 	});
-	
-	
+
+	$scope.selectedTab=1;
 
 }])

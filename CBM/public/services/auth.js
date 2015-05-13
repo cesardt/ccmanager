@@ -7,15 +7,7 @@ angular.module('MyApp')
       login: function(user) {
         
         return $http.post("/login",user).success(function(response){
-            console.log(response);
-          if(response){
-            console.log(response);
-            $cookieStore.put('mail',user.mail);
-            $location.path( "/" );
-        }
-        else{
-         $route.reload();
-       }
+         
 
 
      }). error(function(data, status, headers, config) {
