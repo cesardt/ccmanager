@@ -9,7 +9,7 @@ angular.module('MyApp')
 
 	});
 
-	$scope.selectedTab=2;
+	$scope.selectedTab=1;
 
 	ReviewsByMail.get($cookieStore.get('mail')).success(function(data){
 
