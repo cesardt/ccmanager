@@ -86,6 +86,24 @@ app.get('/comics_by_user', function(req,res){
   });
 });
 
+
+app.get('/reviews_by_user', function(req,res){
+
+  var user_id = req.query.mail;
+  connectionpool.getConnection(function(err, connection){
+
+    connection.query('SELECT iduser from user where mail = ?', req.query.mail, function(err, rows, fields) {
+      userid=rows[0].iduser;
+      connection.query('Select * from reviews join comics on reviews.comics_id = comics.idcomics where user_id = ?',[userid], function(err, rows, fields){
+        res.send(rows);
+        connection.release();
+      });
+    });
+  });
+});
+
+
+
 app.get('/weekly_comics', function(req,res){
   connectionpool.getConnection(function(err, connection){
     if (err) {
@@ -461,8 +479,8 @@ app.put('/update_review', function(req, res){
 
       iduser=rows[0].iduser;
 
-
-      connection.query("UPDATE reviews set content = ? where user_id = ? and comics_id = ?", [review.content, iduser, review.comics_id], function(err, rows, fields){
+      
+      connection.query("UPDATE reviews set content = ? ,score = ? where user_id = ? and comics_id = ?", [review.content,review.score,   iduser, review.comics_id], function(err, rows, fields){
         if (err) {
           console.error(err);
           res.statusCode = 500;

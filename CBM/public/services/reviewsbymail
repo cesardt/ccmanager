@@ -1,0 +1,23 @@
+angular.module('MyApp')
+.factory('ReviewsByMail', ['$http','$route', function($http,$route) {
+      
+    return {
+     
+      get: function(mail) {
+        
+        return $http.get('/reviews_by_user?mail='+mail).success(function(response) {
+          
+           return response;
+           console.log(response);
+       }). error(function(data, status, headers, config) {
+        //$route.reload();
+
+      })
+
+     },
+
+
+   };
+ }]);
+
+

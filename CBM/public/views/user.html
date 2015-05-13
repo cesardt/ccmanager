@@ -17,11 +17,11 @@
 					<a href="#" ng-click="selectedTab = 1;" onclick="return false;" >My collection</a>
 				</li>
 				<li ng-class="{active: selectedTab == 2}">
-					<a href="#" ng-click="selectedTab = 2;" onclick="return false;">?</a>
+					<a href="#" ng-click="selectedTab = 2;" onclick="return false;">Reviews</a>
 				</li>
 				
 			</ul>
-				<br>
+			<br>
 			<div class="tab-content" ng-show="selectedTab == 1">
 				<div class="col-md-3" ng-repeat="comic in comics">
 					<a href={{"info/"+comic.idcomics}}><img style="width:150px;height:225px" src={{comic.cover}} class="imagecar"></a>
@@ -33,7 +33,19 @@
 			</div>
 
 			<div class="tab-content" ng-show="selectedTab == 2">
-			
+
+				<div ng-repeat="review in reviews">
+						<div class="col-md-3">
+					<a href={{"info/"+review.idcomics}}><img style="width:150px;height:225px" src={{review.cover}} class="imagecar"></a>
+				</div>
+					<p>Score: {{review.score}}</p>
+					<br>
+					<p>{{review.content}}</p>
+					<div class="row"></div>
+					<br>
+				</div>
+
+
 			</div>
 
 			
