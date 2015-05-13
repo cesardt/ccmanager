@@ -98,10 +98,10 @@ app.get('/weekly_comics', function(req,res){
     }
     else{
       connection.query('Select * from comics ORDER BY release_date DESC limit 1', function(err, rows, fields){
-        
+
         date = rows[0].release_date;
         connection.query('Select comics.idcomics,comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description, comics.series_id from comics join series on comics.series_id=series.idseries where comics.release_date = ?', date, function(err, rows, fields){
-          
+
           res.send(rows);
           connection.release();
         });
@@ -283,7 +283,7 @@ app.post('/add_comic', function(req,res){
 });
 
 app.post('/add_review', function(req, res){
-  
+
   connectionpool.getConnection(function(err, connection){
     if(err){
      console.error('CONNECTION error: ',err);
@@ -355,7 +355,7 @@ app.put('/delete_user_comic', function(req,res){
 
   connectionpool.getConnection(function(err, connection) {
     connection.query('SELECT iduser from user where mail = ?', req.body.mail, function(err, rows, fields) {
-      
+
       userid=rows[0].iduser;
       
 
@@ -417,7 +417,7 @@ app.put('/update_mail/', function(req,res){
       });
     } 
     else {
-      
+
 
       connection.query('UPDATE user set mail = ? where mail = ?', [req.body.nmail,req.body.omail], function(err, rows, fields) {
         if (err) {
@@ -445,28 +445,41 @@ app.put('/update_review', function(req, res){
       result: 'error',
       err: err.code
     });
+     connection.release();
    }
    else{
 
     review = {
       content: req.body.content,
       score: req.body.score,
-      user_id: req.body.user_id,
+      mail: req.body.mail,
       comics_id: req.body.comic_id
     }
+    
+    var iduser;
+    connection.query("Select iduser from user where mail= ?",review.mail,function(err,rows,fields){
 
-    connection.query("UPDATE reviews set ? where user_id = ? and comics_id = ?", [review, review.user_id, review.comics_id], function(err, rows, fields){
-      if (err) {
-        console.error(err);
-        res.statusCode = 500;
-        res.send({
-          result: 'error',
-          err: err.code
-        });
-      }
-      
-      res.send(rows);
-      connection.release();
+      iduser=rows[0].iduser;
+
+
+      connection.query("UPDATE reviews set content = ? where user_id = ? and comics_id = ?", [review.content, iduser, review.comics_id], function(err, rows, fields){
+        if (err) {
+          console.error(err);
+          res.statusCode = 500;
+          res.send({
+            result: 'error',
+            err: err.code
+          });
+          connection.release();
+        }
+        else{
+          res.send(200);
+          connection.release();
+        }
+
+        
+
+      });
     });
   }
 

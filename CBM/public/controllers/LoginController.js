@@ -1,13 +1,23 @@
 angular.module('MyApp')
-.controller('LoginController', ['$scope', 'Auth',  function($scope,Auth) {
+.controller('LoginController', ['$scope', 'Auth', '$route' ,'$cookieStore','$location', function($scope,Auth,$route,$cookieStore,$location) {
     var response;
     $scope.login = function() {
-        response= Auth.login({
+       Auth.login({
           mail: $scope.email,
           password: $scope.password
-      });
-     console.log(response);
-    };
-   
+      }).success(function(data){
+        console.log(data)
+        if(data=='true'){
+           $cookieStore.put('mail',$scope.email);
+           $location.path( "/" );
+       }
+       else{
+        $route.reload();
+    }
+
+});
+
+  };
+
 
 }]);
