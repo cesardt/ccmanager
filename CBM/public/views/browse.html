@@ -1,17 +1,17 @@
 <div class="centered divbottom">
-	Filter By: 
-	<select ng-model = 'seriesFilter' ng-change = 'filter()' ng-options='title.name for title in series'>
-		 <option value="">--Series--</option>
-	</select>
-	<input type="text" placeholder="Search Title" style="float:right;"></input>
-</div>
-<div class="centered divbottom" style="padding-left:60px">
-	
+	Filter by:
 	<select ng-model = 'publishersFilter' ng-change = 'filter()' ng-options='element.publisher for element in publishers'>
 		 <option value="">--Publisher--</option>
 	</select>
 
 </div>
+<div class="centered divbottom" style="padding-left:60px">
+	
+	<select ng-model = 'seriesFilter' ng-change = 'filter()' ng-options='title.name for title in filteredSeries'>
+		 <option value="">--Series--</option>
+	</select>
+</div>
+
 
 <div class="row">
 	<div class="centered">

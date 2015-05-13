@@ -24,7 +24,6 @@ app.get('/comics/:id', function(req,res){
   var id = req.params.id;
   connectionpool.getConnection(function(err, connection){
     connection.query('Select comics.idcomics, comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description from comics join series on comics.series_id=series.idseries where idcomics = ?', id, function(err, rows, fields){
-      console.log(rows);
       res.send(rows);
       connection.release();
     })
@@ -42,7 +41,7 @@ app.get('/comics', function(req,res){
       });
     } 
     else {
-      connection.query('Select comics.idcomics,comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description, comics.series_id from comics join series on comics.series_id=series.idseries',  function(err, rows, fields) {
+      connection.query('Select comics.idcomics,comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description, comics.series_id from comics join series on comics.series_id=series.idseries ORDER BY release_date DESC',  function(err, rows, fields) {
         if (err) {
           console.error(err);
           res.statusCode = 500;
@@ -98,12 +97,13 @@ app.get('/weekly_comics', function(req,res){
       });
     }
     else{
-      connection.query('Select * from comics limit 1', function(err, rows, fields){
-        console.log(rows);
+      connection.query('Select * from comics ORDER BY release_date DESC limit 1', function(err, rows, fields){
+        
         date = rows[0].release_date;
-        connection.query('Select comics.idcomics,comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description, comics.series_id from comics join series on comics.series_id=series.idseries', date, function(err, rows, fields){
-          console.log(rows);
+        connection.query('Select comics.idcomics,comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description, comics.series_id from comics join series on comics.series_id=series.idseries where comics.release_date = ?', date, function(err, rows, fields){
+          
           res.send(rows);
+          connection.release();
         });
 
       });
@@ -162,7 +162,7 @@ app.get('/user_has_comic/', function(req,res){
 
   var userid="";
 
-  console.log(req.query);
+  
   connectionpool.getConnection(function(err,connection){
     connection.query('SELECT iduser from user where mail = ?', req.query.mail, function(err, rows, fields) {
       userid=rows[0].iduser;
@@ -241,7 +241,7 @@ app.post('/login', function(req,res){
 
          hash=rows[0].password
        }
-       console.log(hash);
+       
        bcrypt.compare(req.body.password, hash, function(err, response) {
         res.send(response);
         connection.release();
@@ -276,14 +276,14 @@ app.post('/add_comic', function(req,res){
         res.send(rows);
         connection.release();
       });
-      console.log(data);
+      
     });
 
   });
 });
 
 app.post('/add_review', function(req, res){
-  console.log(req.body);
+  
   connectionpool.getConnection(function(err, connection){
     if(err){
      console.error('CONNECTION error: ',err);
@@ -355,9 +355,9 @@ app.put('/delete_user_comic', function(req,res){
 
   connectionpool.getConnection(function(err, connection) {
     connection.query('SELECT iduser from user where mail = ?', req.body.mail, function(err, rows, fields) {
-      console.log("Mail: "+req.body.mail);
+      
       userid=rows[0].iduser;
-      console.log("Mail: "+userid);
+      
 
       connection.query('DELETE from user_has_comics where user_id = ? AND comics_id = ?', [userid, req.body.comic_id], function(err, rows, fields) {
         if (err) {
@@ -417,7 +417,7 @@ app.put('/update_mail/', function(req,res){
       });
     } 
     else {
-      console.log(req.body.nmail);
+      
 
       connection.query('UPDATE user set mail = ? where mail = ?', [req.body.nmail,req.body.omail], function(err, rows, fields) {
         if (err) {
@@ -464,7 +464,7 @@ app.put('/update_review', function(req, res){
           err: err.code
         });
       }
-      console.log("Updated review");
+      
       res.send(rows);
       connection.release();
     });
@@ -479,4 +479,4 @@ app.get('*', function(req, res) {
 
 
 
-app.listen(3000);
+app.listen(8080);
