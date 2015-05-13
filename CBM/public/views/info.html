@@ -1,7 +1,7 @@
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css">
 <div class="row" >
 	<div class="col-md-6">
-		<h2>{{title+" #"+issue}}</h2>
+		<h2>{{comic.name+" #"+comic.issue}}</h2>
 		
 	</div>
 	<div class="col-md-6 divbottom" >
@@ -12,10 +12,10 @@
 
 <div class="row">
 	<div class="col-md-3">
-		<img class="imagedesc" src="{{cover}}" ></img>
+		<img class="imagedesc" src="{{comic.cover}}" ></img>
 	</div>
 	<div class="col-md-4">
-		<p class="desc">{{description}}</p>
+		<p class="desc">{{comic.description}}</p>
 	</div >
 </div>
 

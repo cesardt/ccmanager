@@ -23,7 +23,8 @@ app.get('/comics/:id', function(req,res){
 
   var id = req.params.id;
   connectionpool.getConnection(function(err, connection){
-    connection.query('Select comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description from comics join series on comics.series_id=series.idseries where idcomics = ?', id, function(err, rows, fields){
+    connection.query('Select comics.idcomics, comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description from comics join series on comics.series_id=series.idseries where idcomics = ?', id, function(err, rows, fields){
+      console.log(rows);
       res.send(rows);
       connection.release();
     })
