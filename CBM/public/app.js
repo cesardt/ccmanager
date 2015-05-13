@@ -1,4 +1,4 @@
-angular.module('MyApp', ['ui.bootstrap','ngCookies']).
+angular.module('MyApp', ['ngCookies',  'mgcrea.ngStrap'	]).
 config(['$routeProvider', function($routeProvider) {
 	$routeProvider.
 	when('/', {
@@ -23,14 +23,8 @@ config(['$routeProvider', function($routeProvider) {
 	}).
 	when('/user', {
 		templateUrl: 'views/user.html',
-		controller: 'MainController'
+		controller: 'UserController'
 	})
 	
 }]);
 
-angular.module('MyApp')
-.controller('MainController', ['$scope','$rootScope','$cookieStore', function($scope,$rootScope, $cookieStore) {
-
-	
-
-}])
