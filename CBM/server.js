@@ -41,7 +41,7 @@ app.get('/comics', function(req,res){
       });
     } 
     else {
-      connection.query('Select comics.idcomics,comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description, comics.series_id from comics join series on comics.series_id=series.idseries',  function(err, rows, fields) {
+      connection.query('Select comics.idcomics,comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description, comics.series_id from comics join series on comics.series_id=series.idseries ORDER BY release_date DESC',  function(err, rows, fields) {
         if (err) {
           console.error(err);
           res.statusCode = 500;
@@ -97,12 +97,14 @@ app.get('/weekly_comics', function(req,res){
       });
     }
     else{
-      connection.query('Select * from comics limit 1', function(err, rows, fields){
+      connection.query('Select * from comics ORDER BY release_date DESC limit 1', function(err, rows, fields){
         
         date = rows[0].release_date;
-        connection.query('Select comics.idcomics,comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description, comics.series_id from comics join series on comics.series_id=series.idseries', date, function(err, rows, fields){
+        console.log(date);
+        connection.query('Select comics.idcomics,comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description, comics.series_id from comics join series on comics.series_id=series.idseries where comics.release_date = ?', date, function(err, rows, fields){
           
           res.send(rows);
+          connection.release();
         });
 
       });
