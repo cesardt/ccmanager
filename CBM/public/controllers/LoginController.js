@@ -1,11 +1,13 @@
 angular.module('MyApp')
 .controller('LoginController', ['$scope', 'Auth',  function($scope,Auth) {
-
+    var response;
     $scope.login = function() {
-        Auth.login({
+        response= Auth.login({
           mail: $scope.email,
           password: $scope.password
       });
+     console.log(response);
     };
+   
 
 }]);

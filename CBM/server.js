@@ -58,6 +58,35 @@ app.get('/comics', function(req,res){
   });
 });
 
+app.get('/comics_by_user', function(req,res){
+
+  connectionpool.getConnection(function(err, connection) {
+    if (err) {
+      console.error('CONNECTION error: ',err);
+      res.statusCode = 503;
+      res.send({
+        result: 'error',
+        err: err.code
+      });
+    } 
+    else {
+      connection.query('SELECT comics.cover, comics.idcomics FROM user_has_comics join user on user.iduser=user_has_comics.user_id join' +
+        ' comics on comics.idcomics = user_has_comics.comics_id where user.mail = ?',req.query.mail, function(err, rows, fields) {
+          if (err) {
+            console.error(err);
+            res.statusCode = 500;
+            res.send({
+              result: 'error',
+              err: err.code
+            });
+          }
+          res.send(rows);
+          connection.release();
+        });
+    }
+  });
+});
+
 app.get('/weekly_comics', function(req,res){
   connectionpool.getConnection(function(err, connection){
     if (err) {
@@ -439,7 +468,7 @@ app.put('/update_review', function(req, res){
     });
   }
 
-  });
+});
 });
 
 app.get('*', function(req, res) {

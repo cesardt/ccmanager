@@ -1,3 +1,14 @@
 angular.module('MyApp')
-.controller('UserController', ['$scope','$rootScope','$cookieStore', function($scope,$rootScope, $cookieStore) {
+.controller('UserController', ['$scope','$cookieStore','ComicsByMail', function($scope, $cookieStore,ComicsByMail) {
+
+	
+	ComicsByMail.get($cookieStore.get('mail')).success(function(data){
+
+		$scope.comics=data;
+		console.log($scope.comics);
+
+	});
+	
+	
+
 }])

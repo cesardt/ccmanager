@@ -13,17 +13,23 @@
 	<div class="row">
 		<div class="tabbable tabs-below">
 			<ul class="nav nav-pills">
-				<li ng-class="{active: selectedTab == 1}" >
-					<a href="#" ng-click="selectedTab = 1;" onclick="return false;">My collection</a>
+				<li ng-class="{active: selectedTab == 1}" class="active" >
+					<a href="#" ng-click="selectedTab = 1;" onclick="return false;" >My collection</a>
 				</li>
 				<li ng-class="{active: selectedTab == 2}">
 					<a href="#" ng-click="selectedTab = 2;" onclick="return false;">Education</a>
 				</li>
 				
 			</ul>
-
+				<br>
 			<div class="tab-content" ng-show="selectedTab == 1">
-				
+				<div class="col-md-3" ng-repeat="comic in comics">
+					<a href={{"info/"+comic.idcomics}}><img style="width:150px;height:225px" src={{comic.cover}} class="imagecar"></a>
+					<div class="row"><hr></div>
+				</div>
+
+
+
 			</div>
 
 			<div class="tab-content" ng-show="selectedTab == 2">

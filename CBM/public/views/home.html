@@ -2,34 +2,36 @@
 <div clas="row">
   <h1>This week!
   </h1>
-
+  <br>
 </div>
 <div class="row">
   <div class="centered">
     <a ng-repeat = "comic in comics | limitTo: 4" href={{"info/"+comic.idcomics}}><img src={{comic.cover}} class="imagecar" ></a>
   </div>
 </div>
-
+<hr>
 
 <div clas="row">
   <img src="images/Logo-Marvel.jpg" class="logos" >
-
 </div>
+<br>
 <div class="row">
   <div class="centered">
     <a ng-repeat = "comic in marvelComics | limitTo: 4" href={{"info/"+comic.idcomics}}><img src={{comic.cover}} class="imagecar" ></a>
   </div>
 </div>
+<hr>
 
 <div clas="row">
   <img src="images/Logo-DC.jpg" class="logos" >
-
 </div>
+<br>
 <div class="row">
   <div class="centered">
     <a ng-repeat = "comic in dcComics | limitTo: 4" href={{"public/images/batman40.jpg"}}><img src={{comic.cover}} class="imagecar" ></a>
   </div>
 </div>
 <div>
-  <br> 
-  </div>
+ <hr>
+
+</div>
