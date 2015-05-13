@@ -28,9 +28,3 @@ config(['$routeProvider', function($routeProvider) {
 	
 }]);
 
-angular.module('MyApp')
-.controller('MainController', ['$scope','$rootScope','$cookieStore', function($scope,$rootScope, $cookieStore) {
-
-	
-
-}])
