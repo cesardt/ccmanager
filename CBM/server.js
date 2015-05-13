@@ -100,7 +100,6 @@ app.get('/weekly_comics', function(req,res){
       connection.query('Select * from comics ORDER BY release_date DESC limit 1', function(err, rows, fields){
         
         date = rows[0].release_date;
-        console.log(date);
         connection.query('Select comics.idcomics,comics.issue, series.name, series.publisher,comics.release_date, comics.cover, comics.description, comics.series_id from comics join series on comics.series_id=series.idseries where comics.release_date = ?', date, function(err, rows, fields){
           
           res.send(rows);
