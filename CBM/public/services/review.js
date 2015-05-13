@@ -2,8 +2,9 @@ angular.module('MyApp')
 .factory('Review', ['$http', function($http) {
   return {
     getReview: function(user_id, comic_id){
-      return $http.get('comics/mail='+user_id+'?comic='+comic_id).success(function(response){
+      return $http.get('review/?mail='+user_id+'&comic='+comic_id).success(function(response){
           var review = [];
+          console.log(response);
           review.idreviews = response[0].idreviews;
           review.content = response[0].content;
           review.score = response[0].score;
